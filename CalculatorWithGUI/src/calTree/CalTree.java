@@ -1,5 +1,8 @@
 package calTree;
 
+import java.util.Stack;
+import java.util.Vector;
+
 public class CalTree extends NTree{
 	
 	private String operand;
@@ -36,6 +39,86 @@ public class CalTree extends NTree{
 						stackForOperand(c);
 				}
 			}
+		}
+	}
+	
+	public void infixToPostfix() {
+		impl_infixToPostfix(root);
+	}
+	
+	private void impl_infixToPostfix(Node node) {
+		if(node.isEmpty())
+			return;
+		else {
+			Stack<Node> stack = new Stack<Node>();
+			Vector<Node> postfix = new Vector<Node>();
+			
+			for(int i = 0; i < node.size(); i++) {
+				Node buffer = node.get(i);
+				if(buffer.getType() == 'o') {
+					postfix.add(buffer);
+				}else if(buffer.getType() == 'm') {
+					
+					if(buffer.getOperator() == '+') {
+						while(!stack.isEmpty())
+							postfix.add(stack.pop());
+						stack.push(buffer);
+					}
+					
+					else if(buffer.getOperator() == '-') {
+						while(!stack.isEmpty())
+							postfix.add(stack.pop());
+						stack.push(buffer);
+					}
+					
+					else if(buffer.getOperator() == '*') {
+						if(stack.isEmpty())
+							stack.push(buffer);
+						else {
+							if(stack.peek().getOperator() == '*') {
+								while(!stack.isEmpty())
+									postfix.add(stack.pop());
+								stack.push(buffer);
+							}else if(stack.peek().getOperator() == '/') {
+								while(!stack.isEmpty())
+									postfix.add(stack.pop());
+								stack.push(buffer);
+							}else if(stack.peek().getOperator() == '+') {
+								stack.push(buffer);
+							}else if(stack.peek().getOperator() == '-') {
+								stack.push(buffer);
+							}
+						}
+					}
+					else if(buffer.getOperator() == '/') {
+						if(stack.isEmpty())
+							stack.push(buffer);
+						else {
+							if(stack.peek().getOperator() == '*') {
+								while(!stack.isEmpty())
+									postfix.add(stack.pop());
+								stack.push(buffer);
+							}else if(stack.peek().getOperator() == '/') {
+								while(!stack.isEmpty())
+									postfix.add(stack.pop());
+								stack.push(buffer);
+							}else if(stack.peek().getOperator() == '+') {
+								stack.push(buffer);
+							}else if(stack.peek().getOperator() == '-') {
+								stack.push(buffer);
+							}
+						}
+					}
+				}else if(buffer.getType() == 'f') {
+					impl_infixToPostfix(buffer);
+					postfix.add(buffer);
+				}
+			}
+			
+			while(!stack.isEmpty())
+				postfix.add(stack.pop());
+			
+			node.setNextNode(postfix);
 		}
 	}
 	

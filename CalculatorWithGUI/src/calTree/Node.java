@@ -9,7 +9,7 @@ public class Node {
 	private double operand;
 	private boolean confirmed;
 	
-	private Node prevNode;
+	public Node prevNode;
 	private Vector<Node> nextNode;
 	
 	public Node(char type, char operator, double oeprand, boolean confirmed) {
@@ -40,6 +40,9 @@ public class Node {
 	}
 	public void setPrevNode(Node prevNode) {
 		this.prevNode = prevNode;
+	}
+	public void setNextNode(Vector<Node> next) {
+		this.nextNode = next;
 	}
 //get
 	public char getType() {
