@@ -1,8 +1,8 @@
 package calTree;
 
 public class NTree {
-	protected final Node root;
-	Node location;
+	protected Node root;
+	protected Node location;
 	
 	public NTree() {
 		root = new Node('f', (char)-1, (double)-1, false);

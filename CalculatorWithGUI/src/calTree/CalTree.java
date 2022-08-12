@@ -12,7 +12,15 @@ public class CalTree extends NTree{
 		this.operand = new String();
 	}
 	
+	public void clear() {
+		root = new Node('f', (char)-1, (double)-1, false);
+		location = root;
+		operand = "";
+	}
+	
 	public void upload(String input) {
+		if(input.isEmpty())
+			return;
 		for(int i =0; i< input.length(); i++) {
 			char c = input.charAt(i);
 			if(whetherOperator(c)) {
@@ -42,8 +50,76 @@ public class CalTree extends NTree{
 		}
 	}
 	
+	//sorting
 	public void infixToPostfix() {
 		impl_infixToPostfix(root);
+	}
+	
+	//actually calculate
+	public Double calculate(String str) {
+		upload(str);
+		infixToPostfix();
+		impl_calculate(root);
+		return root.getOperand();
+	}
+	
+	private void impl_calculate(Node node) {
+		if(node == null)
+			return;
+			
+		if(node.getType()=='f') {
+			if(!node.whetherConfirmed()) {
+				if(!node.isEmpty()) {
+					Stack<Double> stack = new Stack<Double>();
+					for(int i = 0; i < node.size(); i++) {
+						Node buffer = node.get(i);
+						if(buffer.getType() == 'o') {
+							stack.push(buffer.getOperand());
+						}
+						else if(buffer.getType() == 'm') {
+							Double b = null;
+							Double a = null;
+							if(!stack.isEmpty()) {
+								b = stack.pop();
+							}
+							if(!stack.isEmpty()) {
+								a = stack.pop();
+								stack.push(impl_twoOperandOperate(buffer.getOperator(), a, b));
+							}
+						}
+						else if(buffer.getType() == 'f') {
+							if(!buffer.whetherConfirmed())
+								impl_calculate(buffer);
+							stack.push(buffer.getOperand());
+						}
+					}
+					
+					if(stack.isEmpty()) {
+						System.out.println("Error");
+					}else {
+						node.setOperand(stack.pop());
+						node.setConfirmedTrue();
+					}
+				}
+			}
+		}
+	}
+	private double impl_twoOperandOperate(char operator, Double a, Double b) {
+		switch(operator) {
+		case '+':
+			return a+b;
+		case '-':
+			return a-b;
+		case '*':
+			return a*b;
+		case '/':
+			if(b == 0) {
+				return 0;
+			}else {
+				return a/b;
+			}
+		default: return 0;		
+		}
 	}
 	
 	private void impl_infixToPostfix(Node node) {

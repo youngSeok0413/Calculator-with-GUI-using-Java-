@@ -1,7 +1,6 @@
 package calTree;
 
 import java.util.Vector;
-import debugger.PrintItself;
 
 public class Node {
 	private char type;  // 'f' : formula, 'o' : operand, 'm' : operator(method)
