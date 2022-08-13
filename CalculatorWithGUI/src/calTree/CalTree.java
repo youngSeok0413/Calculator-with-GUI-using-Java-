@@ -6,16 +6,23 @@ import java.util.Vector;
 public class CalTree extends NTree{
 	
 	private String operand;
+	private String errorMsg;
 	
 	public CalTree(){
 		super();
 		this.operand = new String();
+		this.errorMsg = new String();
+	}
+	
+	public String getErrorMsg() {
+		return this.errorMsg;
 	}
 	
 	public void clear() {
 		root = new Node('f', (char)-1, (double)-1, false);
 		location = root;
 		operand = "";
+		errorMsg = "";
 	}
 	
 	public void upload(String input) {
@@ -54,6 +61,7 @@ public class CalTree extends NTree{
 	public void infixToPostfix() {
 		impl_infixToPostfix(root);
 	}
+	
 	
 	//actually calculate
 	public Double calculate(String str) {
@@ -205,6 +213,18 @@ public class CalTree extends NTree{
 	private double parseDouble() {
 		double operand = Double.parseDouble(this.operand);
 		return operand;
+	}
+	
+	private boolean whehterUseDotOne() {
+		int n = 0;
+		for(int i=0; i < operand.length(); i++) {
+			if(operand.charAt(i) == '.') n++;
+			if(n > 1) {
+				this.errorMsg = "ERROR!";
+				return false;}
+		}
+		
+		return true;
 	}
 	
 	private boolean whetherOperator(char c) {

@@ -19,6 +19,7 @@ import calTree.CalTree;
 public class CalFrame extends JFrame implements ActionListener{
 	
 	CalTree caltree;
+	FormulaEditor editor;
 	String formula;
 	
 	JPanel displayPanel;
@@ -40,6 +41,7 @@ public class CalFrame extends JFrame implements ActionListener{
 	public CalFrame(){
 		formula = new String();
 		caltree = new CalTree();
+		editor = new FormulaEditor();
 		
 		this.setSize(900,500);
 		this.setTitle("Calculator");
@@ -181,9 +183,13 @@ public class CalFrame extends JFrame implements ActionListener{
 			caltree.clear();
 		}
 		else if(e.getSource() == btnEqual){
-			//text edit neede(error catch, modify(for example : -1 -> (0-1)))
-			formula = caltree.calculate(formula).toString();
-			caltree.clear();
+			//text edit needed(error catch, modify(for example : -1 -> (0-1)))
+			if(!editor.check(formula)) {
+				formula = "ERROR!";
+			}else {
+				formula = caltree.calculate(formula).toString();
+				caltree.clear();
+			}
 		}
 		
 		display.setText(formula);
